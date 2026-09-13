@@ -1,0 +1,59 @@
+{
+  "id": "co",
+  "name": "CO Monitoring Realtime",
+  "short_name": "CO Monitoring Realtime",
+  "description": "CO Monitoring Realtime berbasis IoT menggunakan ESP32",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1877F2",
+  "icons": [
+    {
+      "src": "192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/qualityair/",
+  "display": "standalone",
+  "screenshots": [
+    {
+      "src": "/345677.png",
+      "sizes": "637x436"
+    },
+    {
+      "src": "/345677.png",
+      "sizes": "637x436"
+    }
+  ],
+  "scope": "/",
+  "orientation": "portrait",
+  "widgets": [
+    {
+      "name": "CO Monitoring",
+      "description": "Monitor CO level in real-time",
+      "short_name": "CO Monitoring",
+      "tag": "co_widget",
+      "type": "application/json",
+      "update": 100,
+      "icons": [
+        {
+          "src": "192x192.png",
+          "sizes": "192x192"
+        }
+      ],
+      "screenshots": [
+        {
+          "src": "/345677.png",
+          "sizes": "637x436",
+          "label": "Widget Screenshot"
+        }
+      ],
+      "template": "/data.json",
+      "data": "/data.json"
+    }
+  ]
+}
