@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id" xml:lang="id" prefix="og: https://ogp.me/ns#">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Index</title>
+    <meta name="robots" content="index, follow, max-snippet:20, max-image-preview:large">
+    <meta name="description" content="Monitor the air quality index and CO levels in real-time.">
+    <meta name="keywords" content="Air Quality, CO Levels, AQI, Air Pollution, Environment">
+    <meta name="author" content="GALIH RIDHO UTOMO">
+    <meta name="referrer" content="origin-when-crossorigin" id="meta_referrer" />
+    <meta name="bingbot" content="noarchive" />
+    <link rel="alternate" media="handheld" href="https://4211421036.github.io/qualityair/" />
+    <link rel="alternate" media="only screen and (max-width: 640px)" href="https://4211421036.github.io/qualityair/" />
+    <link rel="canonical" href="https://4211421036.github.io/qualityair/"/>
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content="Air Quality Index">
+    <meta property="og:description" content="Monitor the air quality index and CO levels in real-time.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://4211421036.github.io">
+    <meta property="og:image" content="https://4211421036.github.io/qualityair/image.jpg">
+    <meta property="og:image:alt" content="Monitor the air quality index and CO levels in real-time." />
+    <meta property="og:image:secure_url" content="https://4211421036.github.io/qualityair/image.jpg">
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="192" />
+    <meta property="og:image:height" content="192" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Air Quality Index">
+    <meta name="twitter:description" content="Monitor the air quality index and CO levels in real-time.">
+    <meta name="twitter:image" content="https://4211421036.github.io/qualityair/image.jpg">
+    <link rel="apple-touch-icon" href="https://4211421036.github.io/qualityair/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://4211421036.github.io/g4lihru/987654567.png" type="image/x-icon">
+    <link rel="manifest" href="https://4211421036.github.io/qualityair/manifest.webmanifest" crossorigin="use-credentials">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --success-color: #10b981;
+            --modal-bg: #ffffff;
+            --background-color: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #7dafff;
+            --secondary-color: #60a5fa;
+            --background: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+            --success-color: #059669;
+            --modal-bg: #1e293b;
+            --background-color: #13151a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            background: var(--background);
+        }
+
+        .header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-color);
+        }
+
+        .main-card {
+            margin: 20px;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .aqi-display {
+            text-align: center;
+        }
+
+        .aqi-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aqi-number {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .aqi-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .aqi-status {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .update-animation {
+            animation: fadeInOut 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .modal {
+            position: fixed;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            height: max-content;
+            background: var(--modal-bg);
+            border-radius: 25px 25px 0 0;
+            transition: bottom 0.3s ease-out;
+            z-index: 0;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal.active {
+            bottom: 76px;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .swipe-indicator {
+            width: 40px;
+            height: 5px;
+            background: var(--border-color);
+            border-radius: 3px;
+            margin: 0 auto 15px;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .modal-content {
+            padding: 20px;
+            height: calc(100% - 70px);
+            overflow-y: auto;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            display: flex;
+            z-index: 1;
+            justify-content: space-around;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .recommendations {
+            margin-top: 20px;
+        }
+
+        .recommendation-item {
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .recommendation-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .splash-screen {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: var(--background-color); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000;
+        }
+        .logos {
+            width: 150px; /* Ukuran awal logo */
+            height: auto;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 25px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logos.morph-to-header {
+            width: 50px; /* Ukuran akhir logo */
+            top: 20px; /* Posisi akhir di header */
+            left: 20px;
+            transform: translate(0, 0); /* Reset transform karena sudah di posisi absolut */
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                color-scheme: dark;
+            }
+        }
+
+        .no-list-style {
+            list-style: none;
+            padding: 0;
+        }
+
+        .upload-progress-container {
+            width: 100px; /* Ensure the container takes the full width of the card */
+            height: 1px; /* Adjust the height of the progress bar */
+            background-color: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            position: fixed; /* Ensure it sits inside the card */
+            margin: -15px 10px;
+        }
+
+        @media (min-width: 375px) and (max-width: 425px) {
+            .upload-progress-container {
+                width: 113px;
+                height: 1px;
+                background-color: var(--border-color);
+                border-radius: 2px;
+                overflow: hidden;
+                position: fixed;
+                margin: -15px -5px;
+                transform: translateX(0%);
+            }
+        }
+        
+        /* When screen width is between 320px and 374px */
+        @media (min-width: 320px) and (max-width: 374px) {
+            .upload-progress-container {
+                width: 83px;
+                height: 1px;
+                background-color: var(--border-color);
+                border-radius: 2px;
+                overflow: hidden;
+                position: fixed;
+                margin: -15px -5px;
+                transform: translateX(0%);
+            }
+        }
+        
+        /* When screen width is 425px */
+        @media (min-width: 425px) {
+            .upload-progress-container {
+                width: 133px;
+                height: 1px;
+                background-color: var(--border-color);
+                border-radius: 2px;
+                overflow: hidden;
+                position: fixed;
+                margin: -15px -5px;
+                transform: translateX(0%);
+            }
+        }
+        
+        .upload-progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #1a73e8;
+            transition: width 0.3s ease;
+        }
+        
+        .upload-status {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+            position: absolute; /* Ensures the status text stays inside the card */
+            top: 60%; /* Adjust position below the progress bar */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .upload-progress-bar.queued {
+            background: linear-gradient(90deg, #1a73e8 0%, #1a73e8 50%, transparent 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: progress-pulse 1.5s infinite linear;
+        }
+        
+        @keyframes progress-pulse {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        .logosa {
+            width: 50px;
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+
+        .logosa.visible {
+            opacity: 1;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div tabindex="0" id="splash-screen" class="splash-screen" aria-labelled="splash-screen" role="banner">
+        <img alt="Logo Application" role="presentation" class="logos" id="splash-logo" src="https://4211421036.github.io/g4lihru/987654567.png" aria-label="logo" aria-labelled="splash-screen">
+    </div>
+    <script>
+        // Hide splash screen after 3 seconds
+        window.addEventListener('load', () => {
+            const splashScreen = document.getElementById('splash-screen');
+            const splashLogo = document.getElementById('splash-logo');
+            const headerLogo = document.getElementById('header-logo');
+
+            // Beri waktu sebentar agar splash screen terlihat
+            setTimeout(() => {
+                // 1. Mulai animasi morph logo
+                splashLogo.classList.add('morph-to-header');
+
+                // 2. Setelah logo mulai bergerak, mulai fade out splash screen
+                setTimeout(() => {
+                    splashScreen.style.opacity = '0';
+                }, 400);
+
+                // 3. Setelah animasi selesai, tampilkan logo header dan hapus splash screen
+                setTimeout(() => {
+                    headerLogo.classList.add('visible');
+                    setTimeout(() => {
+                        splashScreen.style.display = 'none';
+                    }, 100);
+                }, 800);
+            }, 1000); // Tunda 1 detik sebelum memulai animasi
+        });
+    </script>
+    <div tabindex="0" class="app-container">
+        <div role="navigation" class="header">
+            <a class="linked" aria-label="Pelajaran" href="http://4211421036.github.io/" title="Pelajaran">
+                <img alt="Logo Application" role="presentation" class="logosa" id="header-logo" src="https://4211421036.github.io/qualityair/image.jpg" aria-hidden="true">
+            </a>
+            <div>
+                <div role="text" class="greeting" id="greeting" aria-labelled="greeting" aria-hidden="true">Good Morning</div>
+                <div role="text" class="date" id="current-date" aria-label="Current Date"></div>
+            </div>
+            <button role="button" tabindex="-1" type="button" name="theme" class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme" aria-label="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="main-card" tabindex="0" role="main">
+            <div class="aqi-display">
+                <div role="group" class="aqi-circle" role="region" aria-label="Air Quality Measurements">
+                    <div role="treeitem" class="aqi-number" id="ppm-value" aria-labelled="ppm-value" aria-hidden="true">--</div>
+                    <div class="aqi-label">CO PPM</div>
+                </div>
+                <div tabindex="2" class="aqi-status" id="air-quality-status" aria-labelled="air-status" aria-hidden="true" title="Status CO">Calculating...</div>
+                <p id="air-status" role="tooltip">Status CO</p>
+            </div>
+
+            <div class="stats-grid" tabindex="0" role="region" aria-label="Additional Statistics">
+                <div class="stat-card">
+                    <div role="text" tabindex="2" class="stat-value" id="raw-value" aria-labelled="raw-value" aria-hidden="true" aria-label="Last Update Time">--</div>
+                    <div role="text" role="text" class="stat-label">Raw Value</div>
+                </div>
+                <div class="stat-card">
+                    <div id="upload" aria-labelled="upload" aria-hidden="true"></div>
+                    <div role="treeitem" tabindex="2" role="text" class="stat-value" id="timestamp" aria-labelled="timestamp" aria-hidden="true">--</div>
+                    <div role="text" class="stat-label" aria-label="Last Update Time">Last Updated</div>
+                </div>
+            </div>
+        </div>
+
+        <div tabindex="0" class="nav-bar" role="navigation" aria-label="Menu Aplikasi">
+            <div tabindex="0" class="nav-item active" aria-current="page">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                <span role="text">Home</span>
+            </div>
+            <div tabindex="-1" id="history" role="button" class="nav-item" onclick="showModal('history-modal')" accesskey="h">
+                <i class="fas fa-chart-line" aria-hidden="true"></i>
+                <span role="text">History</span>
+            </div>
+            <div tabindex="-1" id="fores" role="button" class="nav-item" onclick="showModal('forecast-modal')" accesskey="f">
+                <i class="fas fa-cloud" aria-hidden="true"></i>
+                <span role="text">Forecast</span>
+            </div>
+            <div tabindex="-1" id="infos" role="button" class="nav-item" onclick="showModal('info-modal')" accesskey="i">
+                <i class="fas fa-info-circle"></i>
+                <span role="text">Info</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div tabindex="1" role="dialog" title="History" class="modal" aria-modal="true" id="history-modal" aria-labelled="history-modal-title" aria-describedby="history-modal" aria-hidden="true">
+        <div id="history-modal-title" role="gruop" tabindex="2" class="modal-header">
+            <div role="treeitem" tabindex="3" class="swipe-indicator"></div>
+            <div role="treeitem" tabindex="3" class="modal-title" role="text">CO Level History</div>
+        </div>
+        <div tabindex="2" class="modal-content">
+            <div tabindex="2" class="chart-container">
+                <canvas id="historyChart" aria-labelled="historyChart" aria-hidden="true" aria-label="Grafik Riwayat Level CO" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forecast Modal -->
+    <div tabindex="2" role="dialog" title="Forescast" class="modal" aria-modal="true"  id="forecast-modal" aria-labelled="forecast-modal-title" aria-describedby="forecast-modal" aria-hidden="true">
+        <div id="forecast-modal-title" role="gruop" tabindex="3" class="modal-header">
+            <div role="treeitem" tabindex="4" class="swipe-indicator"></div>
+            <div role="treeitem" tabindex="4" class="modal-title" role="text">Air Quality Forecast</div>
+        </div>
+        <div tabindex="3" class="modal-content">
+            <div tabindex="4" class="chart-container">
+                <canvas id="forecastChart" aria-labelled="forecastChart" aria-hidden="true" aria-label="Grafik Forecasting Level CO" role="img"></canvas>
+            </div>
+            <div tabindex="5" class="recommendations">
+                <div role="gruop" tabindex="6" class="recommendation-item">
+                    <div role="treeitem" tabindex="7" class="recommendation-title" role="text">Today's Recommendation</div>
+                    <div role="treeitem" tabindex="7" class="recommendation-text" id="daily-recommendation" role="text" aria-describedby="daily-recommendation" aria-hidden="true">
+                        Based on current CO levels...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div tabindex="3" role="dialog" title="Info" class="modal" aria-modal="true" id="info-modal" aria-labelledby="info-modal-title" aria-describedby="info-modal" aria-hidden="true">
+        <div id="info-modal-title" tabindex="4" class="modal-header">
+            <div tabindex="5" class="swipe-indicator"></div>
+            <div tabindex="5" class="modal-title" role="text">CO Information</div>
+        </div>
+        <div tabindex="4" class="recommendation-item">
+            <div tabindex="5" class="recommendation-title" role="text">CO Levels Guide</div>
+            <div tabindex="6" class="recommendation-text">
+                <ul role="list" tabindex="7" class="no-list-style">
+                    <li role="listitem" tabindex="8" aria-label="safe">🟢 0-50 PPM: Safe</li>
+                    <li role="listitem" tabindex="8" aria-label="Moderate">🟡 51-100 PPM: Moderate</li>
+                    <li role="listitem" tabindex="8" aria-label="Unhealthy">🟠 101-150 PPM: Unhealthy for Sensitive Groups</li>
+                    <li role="listitem" tabindex="8" aria-label="Very Unhealthy">🔴 151-200 PPM: Unhealthy</li>
+                    <li role="listitem" tabindex="8" aria-label="Very Dangerous">🟣 >200 PPM: Very Dangerous</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        const progressBarContainer=document.getElementById("upload");let lastTimestamp=null,currentProgressBar=null;function getTimestampParameter(){return`?t=${(new Date).getTime()}`}function createProgressBar(){let t=document.createElement("div");t.classList.add("upload-progress-container"),t.setAttribute("role","progressbar"),t.setAttribute("aria-label","Status upload data ke GitHub"),t.setAttribute("aria-valuenow","0"),t.setAttribute("aria-valuemin","0"),t.setAttribute("aria-valuemax","100");let e=document.createElement("div");e.classList.add("upload-progress-bar"),t.appendChild(e);let a=document.createElement("div");return a.classList.add("upload-status"),a.setAttribute("aria-live","polite"),a.textContent="Dalam antrian...",t.appendChild(a),progressBarContainer.appendChild(t),e}function removeProgressBar(){setTimeout(()=>{currentProgressBar&&(progressBarContainer.removeChild(progressBarContainer.querySelector(".upload-progress-container")),currentProgressBar=null)},500)}async function fetchData(){currentProgressBar||(currentProgressBar=createProgressBar());try{let t=`https://4211421036.github.io/qualityair/data.json${getTimestampParameter()}`,e=await fetch(t,{method:"GET",cache:"no-store",headers:{"Cache-Control":"no-cache, no-store, must-revalidate",Pragma:"no-cache",Expires:"0"}});if(!e.ok)throw Error(`HTTP error! status: ${e.status}`);let a=await e.json();if(!a||!a.data||void 0===a.data.ppm)throw Error("Invalid data structure");let r=a.data.ppm,o=a.data.raw_value,i=a.timestamp;if(lastTimestamp!==i){lastTimestamp=i;let s=0,l=setInterval(()=>{s+=10,currentProgressBar.style.width=`${s}%`,currentProgressBar.style.backgroundColor=s<=30?"#ff9800":s<=60?"#ffeb3b":s<=90?"#4caf50":"#1a73e8",document.querySelector(".upload-status").textContent=`Uploading... ${s}%`,s>=100&&(clearInterval(l),document.querySelector(".upload-status").textContent="Selesai diunggah",removeProgressBar(),setTimeout(()=>{fetchData()},1e3))},1e3);document.getElementById("ppm-value").textContent=r.toFixed(1),document.getElementById("raw-value").textContent=o,document.getElementById("air-quality-status").textContent=getAirQualityStatus(r),document.getElementById("timestamp").textContent=formatTimestamp(i),updateHistoryChart(i,r,o),r>100&&"granted"===Notification.permission&&new Notification("Peringatan Kualitas Udara!",{body:`Tingkat CO (ppm) sudah tidak normal: ${r.toFixed(1)} ppm. Harap ambil tindakan!`,icon:"https://4211421036.github.io/qualityair/warning.png",tag:"co-alert"})}else document.querySelector(".upload-status").textContent="Dalam antrian...";document.getElementById("ppm-value").classList.add("update-animation"),setTimeout(()=>{document.getElementById("ppm-value").classList.remove("update-animation")},500)}catch(n){console.error("Error fetching data:",n),document.querySelector(".upload-status").textContent="Gagal mengunduh data."}}function toggleTheme(){let t="dark"===document.documentElement.getAttribute("data-theme")?"light":"dark";document.documentElement.setAttribute("data-theme",t),localStorage.setItem("theme",t),document.querySelector(".theme-toggle i").className="dark"===t?"fas fa-sun":"fas fa-moon"}fetchData(),setInterval(fetchData,1e3);const savedTheme=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",savedTheme),document.querySelector(".theme-toggle i").className="dark"===savedTheme?"fas fa-sun":"fas fa-moon";let activeModal=null,startY=0,currentY=0;function showModal(t){let e=document.getElementById(t);e.classList.add("active"),activeModal=e,document.querySelectorAll(".nav-item").forEach(e=>{e.classList.remove("active"),e.textContent.toLowerCase().includes(t.split("-")[0])&&e.classList.add("active")})}function hideModal(t){t.classList.remove("active"),activeModal=null,document.querySelectorAll(".nav-item").forEach(t=>{t.classList.remove("active"),t.textContent.toLowerCase().includes("home")&&t.classList.add("active")})}function getRecommendation(t){return t<=50?"the air quality is good. It's safe to go outside.":t<=100?"the air quality is moderate. Sensitive individuals should limit outdoor activities.":t<=150?"the air quality is unhealthy for sensitive groups. Consider wearing a mask if outside.":t<=200?"the air quality is unhealthy. Avoid outdoor activities if possible.":t<=300?"the air quality is very unhealthy. Stay indoors and limit physical activities.":"the air quality is hazardous. Remain indoors and use air purifiers if available."}function getRecommendation(t){return t<=50?"the air quality is good. It's safe to go outside.":t<=100?"the air quality is moderate. Sensitive individuals should limit outdoor activities.":t<=150?"the air quality is unhealthy for sensitive groups. Consider wearing a mask if outside.":t<=200?"the air quality is unhealthy. Avoid outdoor activities if possible.":t<=300?"the air quality is very unhealthy. Stay indoors and limit physical activities.":"the air quality is hazardous. Remain indoors and use air purifiers if available."}async function typeText(t,e,a=50){return new Promise(r=>{let o=0;t.textContent="",function i(){o<e.length?(t.textContent+=e.charAt(o),o++,setTimeout(i,a)):r()}()})}document.querySelectorAll(".modal").forEach(t=>{t.addEventListener("touchstart",t=>{startY=t.touches[0].clientY}),t.addEventListener("touchmove",e=>{if(!activeModal)return;currentY=e.touches[0].clientY;let a=currentY-startY;a>0&&(e.preventDefault(),t.style.transform=`translate(-50%, ${a}px)`)}),t.addEventListener("touchend",e=>{activeModal&&(currentY-startY>100&&hideModal(t),t.style.transform="translateX(-50%)")})});let lastForecast=null,isTyping=!1;async function updateRecommendation(t){let e=document.getElementById("daily-recommendation"),a=t.reduce((t,e)=>t+e,0)/t.length;if(null!==lastForecast&&a===lastForecast||isTyping)return;isTyping=!0,lastForecast=a;let r=getRecommendation(a),o=`Based on current CO levels prediction (${a.toFixed(1)} ppm), ${r}`;await typeText(e,o,50),isTyping=!1}const historicalData={times:[],values:[],rawValues:[],forecastTimes:[],forecastValues:[]};function updateHistoryChart(t,e,a){historicalData.times.length>24&&(historicalData.times.shift(),historicalData.values.shift(),historicalData.rawValues.shift()),historicalData.times.push(new Date(t).toLocaleTimeString()),historicalData.values.push(e),historicalData.rawValues.push(a),historyChart.data.labels=historicalData.times,historyChart.data.datasets[0].data=historicalData.values,historyChart.update()}const historyCtx=document.getElementById("historyChart").getContext("2d"),historyChart=new Chart(historyCtx,{type:"line",data:{labels:[],datasets:[{label:"CO Level (PPM)",data:[],borderColor:"#3b82f6",tension:.4,fill:!1}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue("--text-primary")}}},scales:{y:{beginAtZero:!0,grid:{color:getComputedStyle(document.documentElement).getPropertyValue("--border-color")},ticks:{color:getComputedStyle(document.documentElement).getPropertyValue("--text-secondary")}},x:{grid:{color:getComputedStyle(document.documentElement).getPropertyValue("--border-color")},ticks:{color:getComputedStyle(document.documentElement).getPropertyValue("--text-secondary")}}}}}),forecastCtx=document.getElementById("forecastChart").getContext("2d"),forecastChart=new Chart(forecastCtx,{type:"line",data:{labels:[],datasets:[{label:"Historical",data:[],borderColor:"#3b82f6",tension:.4,fill:!1},{label:"Forecast",data:[],borderColor:"#10b981",borderDash:[5,5],tension:.4,fill:!1}]},options:{responsive:!0,maintainAspectRatio:!1,interaction:{intersect:!1,mode:"nearest"},plugins:{legend:{display:!0,position:"top",labels:{color:getComputedStyle(document.documentElement).getPropertyValue("--text-primary")}},tooltip:{mode:"index",intersect:!1}},scales:{y:{beginAtZero:!0,grid:{color:getComputedStyle(document.documentElement).getPropertyValue("--border-color")},ticks:{color:getComputedStyle(document.documentElement).getPropertyValue("--text-secondary")},title:{display:!0,text:"CO Level (PPM)"}},x:{grid:{color:getComputedStyle(document.documentElement).getPropertyValue("--border-color")},ticks:{color:getComputedStyle(document.documentElement).getPropertyValue("--text-secondary")},title:{display:!0,text:"Time"}}}}});function predictNextValues(t,e=6){if(t.length<2)return Array(e).fill(t[0]||0);let a=t.slice(-6),r=[];for(let o=1;o<a.length;o++)r.push(a[o]-a[o-1]);let i=r.reduce((t,e)=>t+e,0)/r.length,s=[],l=t[t.length-1];for(let n=0;n<e;n++){l+=i;let c=.2*i,d=(Math.random()-.5)*c;s.push(Math.max(0,l+d))}return s}function updateHistoryChart(t,e,a){historicalData.times.length>24&&(historicalData.times.shift(),historicalData.values.shift(),historicalData.rawValues.shift());let r=new Date(t).toLocaleTimeString();historicalData.times.push(r),historicalData.values.push(e),historicalData.rawValues.push(a),historyChart.data.labels=historicalData.times,historyChart.data.datasets[0].data=historicalData.values,historyChart.update();let o=new Date(t),i=[];historicalData.forecastValues=[],historicalData.forecastTimes=[];for(let s=1;s<=6;s++){let l=new Date(o.getTime()+5*s*6e4).toLocaleTimeString();historicalData.forecastTimes.push(l),i.push(l)}historicalData.forecastValues=predictNextValues(historicalData.values);let n=historicalData.times.slice(-6),c=historicalData.values.slice(-6);forecastChart.data.labels=[...n,...i],forecastChart.data.datasets[0].data=[...c,...Array(6).fill(null)],forecastChart.data.datasets[1].data=[...Array(6).fill(null),...historicalData.forecastValues],forecastChart.update(),updateRecommendation(historicalData.forecastValues)}function updateChartColors(){let t=getComputedStyle(document.documentElement).getPropertyValue("--text-primary"),e=getComputedStyle(document.documentElement).getPropertyValue("--border-color");historyChart.options.scales.y.grid.color=e,historyChart.options.scales.x.grid.color=e,historyChart.options.scales.y.ticks.color=t,historyChart.options.scales.x.ticks.color=t,historyChart.options.plugins.legend.labels.color=t,forecastChart.options.scales.y.grid.color=e,forecastChart.options.scales.x.grid.color=e,forecastChart.options.scales.y.ticks.color=t,forecastChart.options.scales.x.ticks.color=t,forecastChart.options.plugins.legend.labels.color=t,historyChart.update(),forecastChart.update()}function getAirQualityStatus(t){return t<=50?"\uD83D\uDFE2 Safe":t<=100?"\uD83D\uDFE1 Moderate":t<=150?"\uD83D\uDFE0 Unhealthy for Sensitive Groups":t<=200?"\uD83D\uDD34 Unhealthy":"\uD83D\uDFE3 Very Dangerous"}function getRecommendation(t){return t<=50?"Air quality is good. Perfect for outdoor activities.":t<=100?"Air quality is acceptable. Consider reducing prolonged outdoor activities if you are sensitive to CO.":t<=150?"Members of sensitive groups may experience health effects. Limit outdoor exposure.":t<=200?"Everyone may begin to experience health effects. Avoid outdoor activities.":"Health alert: everyone may experience serious health effects. Stay indoors."}function updateGreeting(){let t=(new Date).getHours(),e=document.getElementById("greeting");e.textContent=t>=5&&t<12?"Good Morning":t>=12&&t<17?"Good Afternoon":t>=17&&t<21?"Good Evening":"Good Night"}function formatTimestamp(t){let e=new Date(t);return`${e.getHours().toString().padStart(2,"0")}:${e.getMinutes().toString().padStart(2,"0")}`}function updateChartColors(){let t=getComputedStyle(document.documentElement).getPropertyValue("--text-primary"),e=getComputedStyle(document.documentElement).getPropertyValue("--border-color");historyChart.options.scales.y.grid.color=e,historyChart.options.scales.x.grid.color=e,historyChart.options.scales.y.ticks.color=t,historyChart.options.scales.x.ticks.color=t,historyChart.options.plugins.legend.labels.color=t,historyChart.update()}"granted"!==Notification.permission&&Notification.requestPermission().then(t=>{"granted"===t&&console.log("Permission granted for notifications")}),document.getElementById("current-date").textContent=(new Date).toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"}),updateGreeting(),setInterval(updateGreeting,6e4),window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",t=>{let e=t.matches?"dark":"light";document.documentElement.setAttribute("data-theme",e),localStorage.setItem("theme",e),updateChartColors()});
+    </script>
+</body>
+
+</html>
